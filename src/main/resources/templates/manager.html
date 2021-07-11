@@ -1,0 +1,120 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Manager Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+Welcome to cafe:
+<b><span th:text="${currentUser.getName()}"></span><br></b>
+<a th:href="@{/logout}" class="btn btn-primary">Log out</a>
+<div class="container-fluid">
+    <div class="alert alert-primary alert-dismissible fade show" th:if="${addUserError}">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <span style="color: red" th:text="${addUserError}"></span>
+    </div>
+    <div class="container">
+        <h3>Add new user:</h3>
+        <div id="newUserForm" class="form">
+            <form action="/manager/add-user" th:object="${newUser}" method="post">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input id="name" class="form-control" type="text" placeholder="Name" th:field="*{name}">
+                </div>
+                <div class="form-group">
+                    <label for="uname">Username:</label>
+                    <input id="uname" class="form-control" type="text" placeholder="Username" th:field="*{username}">
+                </div>
+                <div class="form-group">
+                    <label for="pass">Password:</label>
+                    <input id="pass" class="form-control" type="password" placeholder="password" th:field="*{password}">
+                </div>
+                <div class="form-group">
+                    <label for="utype">Type:</label>
+                    <select id="utype"  th:field="*{type}" class="form-control">
+                        <option th:each="i : ${T(com.sfl.cafe.model.enums.UserType).values()}" th:value="${i}"
+                                th:text="${i}">
+                        </option>
+                    </select>
+                </div>
+
+
+                <button type="submit" class="btn btn-primary">Add</button>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <h3>Add new table:</h3>
+        <div id="newTableForm" class="form">
+            <form action="/manager/add-table" th:object="${newTable}" method="post">
+                <div class="form-group">
+                    <label for="tNumber">Table number</label>
+                    <input id="tNumber" class="form-control" type="text" placeholder="TableNumber" th:field="*{number}">
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="container">
+        <h3>Add new product:</h3>
+        <div id="newProductForm" class="form">
+            <form action="/manager/add-product" th:object="${newProduct}" method="post">
+                <div class="form-group">
+                    <label for="pName">ProductName</label>
+                    <input id="pName" class="form-control" type="text" placeholder="Name" th:field="*{name}">
+                </div>
+                <div class="form-group">
+                    <label for="pPrice">Product rice</label>
+                    <input id="pPrice" class="form-control" type="number" placeholder="Price" th:field="*{price}">
+                </div>
+                <button type="submit" class="btn btn-primary">Add</button>
+
+            </form>
+        </div>
+    </div>
+
+    <div class="container" th:if="${openTables.size()>0}">
+        <h3>Assign free tables to waiter</h3>
+        <div>
+            <table>
+                <tr th:each="table : ${openTables}">
+                    <form action="/manager/table-assign" method="post">
+                        <label for="tableNumber">Table : </label>
+                        <input hidden id="tableId" th:name="tableId" th:value="${table.id}" readonly>
+                        <input  id="tableNumber" name="table" th:value="${table.number}" readonly>
+                        <label for="waiterId">Waiter : </label>
+                        <select name="waiterId" id="waiterId">
+                            <option th:each="i : ${allWaiters}" th:value="${i.getId()}" th:text="${i.getName()}">
+                            </option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Assign</button>
+                    </form>
+                    <br>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div  class="container" th:if="${openTables.size()==0}">
+        <h3>There are not open tables</h3>
+    </div>
+
+</div>
+</body>
+
+</html>

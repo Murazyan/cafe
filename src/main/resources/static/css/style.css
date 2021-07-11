@@ -1,0 +1,12 @@
+.container {
+    padding: 16px;
+    background-color: #eeeeee;
+}
+form {
+    width: 400px;
+    margin: auto;
+}
+button.btn, button {
+    padding-left: 20px;
+    padding-right: 20px;
+}
